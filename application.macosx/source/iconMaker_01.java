@@ -1,4 +1,22 @@
-import processing.pdf.*;
+import processing.core.*; 
+import processing.data.*; 
+import processing.event.*; 
+import processing.opengl.*; 
+
+import processing.pdf.*; 
+
+import java.util.HashMap; 
+import java.util.ArrayList; 
+import java.io.File; 
+import java.io.BufferedReader; 
+import java.io.PrintWriter; 
+import java.io.InputStream; 
+import java.io.OutputStream; 
+import java.io.IOException; 
+
+public class iconMaker_01 extends PApplet {
+
+
 int grid[][];
 int cell = 10;
 int w = 500, h = 500;
@@ -11,10 +29,10 @@ boolean drawing = false, erasing = false, showImage = true;
 boolean displayGrid = false;
 String [] loadedIcon;
 PImage[] img;
-void settings() {
+public void settings() {
   size(w, h);
 }
-void setup() {
+public void setup() {
   img = new PImage[10];
   for (int i = 1; i <= 10; i++) {
     img[i - 1] = loadImage("icon_" + i + ".png");
@@ -26,7 +44,7 @@ void setup() {
     }
   }
 }
-void draw() {
+public void draw() {
   background(0);
   if(showImage)image(img[count % img.length], 0, 0);
   noStroke();
@@ -42,7 +60,7 @@ void draw() {
     for (int y = 0; y < rows; y ++) {
       noFill();
       stroke(255);
-      strokeWeight(.3);
+      strokeWeight(.3f);
       rect(x * cell, y * cell, cell, cell);
     }
   }
@@ -64,7 +82,7 @@ void draw() {
   }
 }
 
-void saveIcon() {
+public void saveIcon() {
   String [] list = new String [cols * rows];
   for (int x = 0; x < cols; x ++) {
     for (int y = 0; y < rows; y ++) {
@@ -75,16 +93,16 @@ void saveIcon() {
   saveStrings("icon.txt", list);
 }
 
-void loadIcon() {
+public void loadIcon() {
   loadedIcon = loadStrings("icon.txt");
   for (int x = 0; x < cols; x ++) {
     for (int y = 0; y < rows; y ++) {
       int index = x + cols * y;
-      grid[x][y] = int(loadedIcon[index]);
+      grid[x][y] = PApplet.parseInt(loadedIcon[index]);
     }
   }
 }
-void keyPressed() {  
+public void keyPressed() {  
   if (key == 'i')count++;
   if (key == 't')showImage = !showImage;
   if (key == 'e')blank();
@@ -112,10 +130,19 @@ void keyPressed() {
   }
 }
 
-void blank () {
+public void blank () {
   for (int x = 0; x < cols; x ++) {
     for (int y = 0; y < rows; y ++) {
       grid[x][y] = 1;
+    }
+  }
+}
+  static public void main(String[] passedArgs) {
+    String[] appletArgs = new String[] { "iconMaker_01" };
+    if (passedArgs != null) {
+      PApplet.main(concat(appletArgs, passedArgs));
+    } else {
+      PApplet.main(appletArgs);
     }
   }
 }
